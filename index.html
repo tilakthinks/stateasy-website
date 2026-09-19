@@ -1,0 +1,1169 @@
+<title>Stat Easy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap">
+<script>
+  if (!window.matchMedia || !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    document.documentElement.className += " anim";
+  }
+</script>
+<style>
+:root{
+  color-scheme:light;
+  --paper:#FFFFFF;
+  --surface:#F5F6F8;
+  --surface-2:#ECEEF3;
+  --ink:#12151C;
+  --ink-2:#414755;
+  --ink-3:#6B7280;
+  --rule:#E2E5EB;
+  --rule-mid:#D2D7E0;
+  --rule-strong:#B8BEC9;
+  --accent:#2B2F86;
+  --accent-deep:#1B1F5E;
+  --accent-mid:#5A60B4;
+  --accent-tint:#8A90CC;
+  --accent-wash:#F1F2F9;
+  --wa:#128C4A;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans","Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --maxw:1060px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink-2);
+  font-family:var(--sans);font-size:16.5px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+img{max-width:100%}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:400;color:var(--ink);margin:0;line-height:1.14;letter-spacing:-.011em;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+.wrap{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:24px}
+@media (max-width:520px){.wrap{padding-inline:20px}}
+
+.skip{position:absolute;left:-9999px;top:0;background:var(--ink);color:#fff;padding:10px 16px;z-index:99;font-family:var(--mono);font-size:13px}
+.skip:focus{left:10px;top:10px}
+
+.kicker{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.17em;text-transform:uppercase;color:var(--ink-3);margin:0}
+.sec{padding-block:clamp(64px,9vw,112px);border-top:1px solid var(--rule)}
+.sec:first-of-type{border-top:0}
+.sec-head{max-width:62ch;margin-bottom:clamp(32px,4vw,48px)}
+.sec-head h2{font-size:clamp(28px,3.9vw,42px);font-weight:300;margin-top:14px}
+.sec-head .lede{margin-top:16px;font-size:18px;color:var(--ink-2);max-width:58ch}
+
+/* ---------- header ---------- */
+.site-head{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.9);backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid transparent;transition:border-color .3s var(--ease)}
+.site-head.is-scrolled{border-bottom-color:var(--rule)}
+.head-in{display:flex;align-items:center;gap:24px;min-height:68px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;margin-right:auto}
+.brand svg{display:block;flex:none}
+.brand-name{font-family:var(--serif);font-size:20px;font-weight:400;color:var(--ink);letter-spacing:-.01em}
+.head-nav{display:flex;gap:26px;font-size:14.5px}
+.head-nav a{color:var(--ink-2);text-decoration:none;padding-block:4px;
+  background-image:linear-gradient(var(--ink),var(--ink));background-repeat:no-repeat;
+  background-position:0 100%;background-size:0 1px;transition:background-size .3s var(--ease),color .2s}
+.head-nav a:hover{color:var(--ink);background-size:100% 1px}
+@media (max-width:900px){.head-nav{display:none}}
+@media (max-width:640px){.site-head .btn{display:none}}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--sans);
+  font-size:14.5px;font-weight:500;letter-spacing:.005em;padding:11px 19px;border-radius:4px;
+  border:1px solid transparent;text-decoration:none;cursor:pointer;white-space:nowrap;
+  transition:background .2s var(--ease),color .2s var(--ease),border-color .2s var(--ease),transform .12s var(--ease)}
+.btn:active{transform:translateY(1px)}
+.btn-solid{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn-solid:hover{background:#000;border-color:#000}
+.btn-line{background:transparent;color:var(--ink);border-color:var(--rule-mid)}
+.btn-line:hover{border-color:var(--ink)}
+.btn-accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-accent:hover{background:var(--accent-deep);border-color:var(--accent-deep)}
+.btn-sm{padding:9px 15px;font-size:13.5px}
+.wa{width:16px;height:16px;flex:none;fill:#3BD47E}
+.btn-line .wa,.dock .btn-line .wa{fill:var(--wa)}
+
+/* ---------- section index rail ---------- */
+.rail{display:none}
+@media (min-width:1240px){
+  .rail{display:block;position:fixed;left:18px;top:50%;transform:translateY(-50%);z-index:50}
+  .rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px}
+  .rail a{display:flex;align-items:center;gap:9px;text-decoration:none;font-family:var(--mono);font-size:10.5px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--rule-strong);transition:color .25s var(--ease)}
+  .rail .tick{display:block;width:10px;height:1px;background:currentColor;transition:width .35s var(--ease)}
+  .rail a:hover{color:var(--ink-3)}
+  .rail a.is-active{color:var(--accent)}
+  .rail a.is-active .tick{width:22px}
+}
+
+/* ---------- hero ---------- */
+.hero{padding-block:clamp(52px,7vw,92px) clamp(48px,6vw,76px)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(32px,5vw,64px);align-items:center}
+@media (max-width:920px){.hero-grid{grid-template-columns:1fr;gap:40px;align-items:start}}
+.hero h1{font-size:clamp(40px,6.6vw,68px);font-weight:300;line-height:1.04;letter-spacing:-.022em;margin-top:20px}
+.hero h1 em{font-style:italic;font-weight:300;color:var(--accent)}
+.hero-sub{margin-top:24px;font-size:18.5px;line-height:1.6;color:var(--ink-2);max-width:50ch}
+.hero-sub b{font-weight:500;color:var(--ink)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.hero-meta{margin-top:24px;padding-top:20px;border-top:1px solid var(--rule);font-family:var(--mono);
+  font-size:12px;color:var(--ink-3);line-height:1.75;letter-spacing:.01em}
+
+/* ---------- figures (shared) ---------- */
+.fig{margin:0}
+.fig svg{display:block;width:100%;height:auto;overflow:visible}
+.fig figcaption{margin-top:14px;font-family:var(--mono);font-size:11.5px;line-height:1.7;color:var(--ink-3);letter-spacing:.01em}
+.fig figcaption b{color:var(--ink-2);font-weight:500}
+.ax-line{stroke:var(--rule-mid);stroke-width:1;fill:none}
+.ax-grid{stroke:var(--rule);stroke-width:1;fill:none}
+.ax-txt{font-family:"IBM Plex Mono",monospace;font-size:10.5px;fill:var(--ink-3);letter-spacing:.04em}
+.ax-title{font-family:"IBM Plex Mono",monospace;font-size:10.5px;fill:var(--ink-3);letter-spacing:.12em;text-transform:uppercase}
+.pt{fill:var(--accent);stroke:var(--paper);stroke-width:1.5;transition:r .18s var(--ease),fill .18s var(--ease)}
+.pt:hover{r:7;fill:var(--accent-deep)}
+.fit{stroke:var(--accent);stroke-width:2;fill:none;stroke-linecap:round}
+.fit-band{fill:var(--accent);opacity:.07}
+
+.anim .pt{opacity:0;animation:popIn .5s var(--ease) forwards;animation-delay:calc(240ms + var(--i) * 34ms)}
+.anim .fit{stroke-dasharray:420;stroke-dashoffset:420;animation:draw 1.1s var(--ease) .96s forwards}
+.anim .fit-band{opacity:0;animation:fadeBand .7s var(--ease) 1.5s forwards}
+.anim .fig-note{opacity:0;animation:fadeIn .6s var(--ease) 1.7s forwards}
+@keyframes popIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeBand{from{opacity:0}to{opacity:.07}}
+@keyframes riseIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.pt{transform-box:fill-box;transform-origin:center}
+
+.anim .rise{opacity:0;animation:riseIn .7s var(--ease) forwards}
+.anim .rise-1{animation-delay:.05s}
+.anim .rise-2{animation-delay:.14s}
+.anim .rise-3{animation-delay:.23s}
+.anim .rise-4{animation-delay:.32s}
+.anim .rise-5{animation-delay:.41s}
+
+/* ---------- facts strip ---------- */
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+@media (max-width:640px){.facts{grid-template-columns:1fr}}
+.fact{padding:26px 28px 26px 0;border-right:1px solid var(--rule)}
+.fact:last-child{border-right:0}
+@media (max-width:640px){.fact{border-right:0;border-bottom:1px solid var(--rule);padding-right:0}.fact:last-child{border-bottom:0}}
+.fact .v{font-family:var(--serif);font-size:30px;font-weight:300;color:var(--ink);line-height:1.1;font-variant-numeric:tabular-nums}
+.fact .l{margin-top:7px;font-size:14.5px;color:var(--ink-3);line-height:1.5}
+
+/* ---------- statement / founder ---------- */
+.statement{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,60px);align-items:start}
+@media (max-width:840px){.statement{grid-template-columns:1fr;gap:32px}}
+.statement p + p{margin-top:18px}
+.pullquote{border-left:2px solid var(--accent);padding-left:26px}
+.pullquote blockquote{margin:0;font-family:var(--serif);font-size:clamp(20px,2.5vw,25px);font-weight:300;
+  line-height:1.44;color:var(--ink);letter-spacing:-.008em}
+.pullquote blockquote em{font-style:italic}
+.attrib{margin-top:20px;font-family:var(--mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);line-height:1.8}
+.attrib b{color:var(--ink-2);font-weight:500}
+
+/* ---------- services ---------- */
+.svc{border-top:1px solid var(--rule-mid)}
+.svc-row{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:8px 40px;padding:26px 0;
+  border-bottom:1px solid var(--rule);transition:background .25s var(--ease)}
+@media (max-width:780px){.svc-row{grid-template-columns:1fr;gap:10px}}
+.svc-row:hover{background:linear-gradient(90deg,var(--accent-wash),rgba(255,255,255,0))}
+.svc-row h3{font-size:22px;font-weight:400}
+.svc-row p{color:var(--ink-2);max-width:58ch}
+.svc-methods{margin-top:11px;font-family:var(--mono);font-size:11.5px;line-height:1.85;color:var(--ink-3);letter-spacing:.015em}
+
+/* ---------- specimen panel ---------- */
+.specimen{border:1px solid var(--rule-mid);border-radius:6px;background:var(--paper);overflow:hidden}
+.spec-tabs{position:relative;display:flex;gap:0;border-bottom:1px solid var(--rule);background:var(--surface);overflow-x:auto}
+.spec-tabs button{appearance:none;background:none;border:0;cursor:pointer;font-family:var(--mono);
+  font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);
+  padding:15px 22px;white-space:nowrap;transition:color .22s var(--ease)}
+.spec-tabs button:hover{color:var(--ink-2)}
+.spec-tabs button[aria-selected="true"]{color:var(--accent)}
+.tab-ink{position:absolute;bottom:-1px;left:0;height:2px;width:0;background:var(--accent);transition:transform .38s var(--ease),width .38s var(--ease)}
+.spec-body{padding:clamp(20px,3vw,32px)}
+.spec-panel .fig svg{max-width:580px;margin-inline:auto}
+.spec-panel .fig{display:flex;flex-direction:column;align-items:center}
+.spec-panel .fig figcaption{align-self:stretch}
+.spec-panel{display:none}
+.spec-panel.is-on{display:block;animation:fadeIn .35s var(--ease)}
+.spec-cap{margin-bottom:16px;font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;color:var(--ink-2);line-height:1.7}
+.spec-cap b{color:var(--ink);font-weight:500}
+.spec-foot{margin-top:16px;padding-top:14px;border-top:1px solid var(--rule);font-family:var(--mono);
+  font-size:11px;line-height:1.75;color:var(--ink-3)}
+.stamp{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);background:var(--accent-wash);border:1px solid #DEE0EE;border-radius:3px;padding:3px 8px;margin-bottom:14px}
+
+.t1-scroll{overflow-x:auto}
+table.t1{width:100%;min-width:560px;border-collapse:collapse;font-size:14.5px;font-variant-numeric:tabular-nums}
+table.t1 th,table.t1 td{padding:10px 14px;text-align:right;border:0}
+table.t1 thead th{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;color:var(--ink-3);
+  border-bottom:1px solid var(--ink);padding-bottom:9px;vertical-align:bottom}
+table.t1 thead th small{display:block;font-weight:400;color:var(--rule-strong);margin-top:3px}
+table.t1 th:first-child,table.t1 td:first-child{text-align:left;color:var(--ink);font-weight:400}
+table.t1 tbody tr:last-child td,table.t1 tbody tr:last-child th{border-bottom:1px solid var(--ink)}
+table.t1 tbody td{color:var(--ink-2);border-bottom:1px solid var(--rule)}
+table.t1 tbody th{font-weight:400;color:var(--ink);border-bottom:1px solid var(--rule);font-size:14.5px}
+table.t1 .sig{color:var(--accent);font-weight:500}
+.bar{fill:var(--accent-tint);transition:fill .2s var(--ease)}
+.bar.hi{fill:var(--accent)}
+.bar-g:hover .bar{fill:var(--accent-deep)}
+.err{stroke:var(--ink-2);stroke-width:1.25;fill:none}
+.val-lab{font-family:"IBM Plex Mono",monospace;font-size:11.5px;fill:var(--ink);font-weight:500}
+.anim .bar-g .bar{transform:scaleY(0);transform-box:fill-box;transform-origin:bottom;transition:transform .75s var(--ease);transition-delay:calc(var(--i) * 110ms)}
+.anim .bar-g.in .bar{transform:scaleY(1)}
+.anim .bar-g .err,.anim .bar-g .val-lab{opacity:0;transition:opacity .45s var(--ease);transition-delay:calc(340ms + var(--i) * 110ms)}
+.anim .bar-g.in .err,.anim .bar-g.in .val-lab{opacity:1}
+
+/* ---------- process ---------- */
+.steps{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(20px,3vw,34px)}
+@media (max-width:880px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:540px){.steps{grid-template-columns:1fr;gap:0}}
+.steps::before{content:"";position:absolute;top:5px;left:0;right:0;height:1px;background:var(--rule-mid);
+  transform:scaleX(0);transform-origin:left;transition:transform 1.1s var(--ease)}
+.steps.in::before{transform:scaleX(1)}
+:root:not(.anim) .steps::before,html:not(.anim) .steps::before{transform:scaleX(1)}
+@media (max-width:540px){.steps::before{display:none}}
+.step{position:relative;padding-top:26px}
+@media (max-width:540px){.step{padding-top:22px;padding-bottom:22px;border-bottom:1px solid var(--rule)}.step:last-child{border-bottom:0}}
+.step::before{content:"";position:absolute;top:2px;left:0;width:7px;height:7px;border-radius:50%;background:var(--paper);
+  border:1px solid var(--rule-strong);transition:background .3s var(--ease),border-color .3s var(--ease)}
+.steps.in .step::before{background:var(--accent);border-color:var(--accent)}
+@media (max-width:540px){.step::before{display:none}}
+.step .n{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.step h3{font-size:19px;font-weight:400;margin-top:9px}
+.step p{margin-top:9px;font-size:15px;color:var(--ink-2);line-height:1.6}
+
+/* ---------- pricing ---------- */
+.fees{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(30px,5vw,58px);align-items:start}
+@media (max-width:880px){.fees{grid-template-columns:1fr;gap:40px}}
+.barchart{display:flex;flex-direction:column;gap:22px}
+.brow{display:flex;flex-direction:column;gap:9px}
+.brow .blab{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+.brow .bname{font-size:14.5px;color:var(--ink-2)}
+.brow .bval{font-family:var(--mono);font-size:14.5px;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.brow.ours .bname{color:var(--ink);font-weight:500}
+.brow.ours .bval{color:var(--accent);font-weight:500}
+.btrack{height:30px;background:var(--surface);border-radius:3px;overflow:hidden}
+.bfill{height:100%;background:var(--accent-tint);border-radius:0 3px 3px 0;transform-origin:left center}
+.brow.ours .bfill{background:var(--accent)}
+.anim .bfill{transform:scaleX(0);transition:transform 1s var(--ease)}
+.anim .in .bfill{transform:scaleX(1)}
+.anim .brow:nth-child(2) .bfill{transition-delay:.14s}
+.bscale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--ink-3);
+  padding-top:8px;border-top:1px solid var(--rule);letter-spacing:.04em}
+.fee-table{width:100%;border-collapse:collapse;font-size:15px}
+.fee-table caption{caption-side:top;text-align:left;font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);padding-bottom:14px}
+.fee-table thead th sup{text-transform:none;font-size:9px;vertical-align:super}
+.fee-table thead th{font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink-3);text-align:right;padding:0 0 10px 14px;border-bottom:1px solid var(--ink)}
+.fee-table thead th:first-child{text-align:left;padding-left:0}
+.fee-table tbody th{text-align:left;font-weight:400;color:var(--ink);padding:15px 14px 15px 0;border-bottom:1px solid var(--rule);font-size:15.5px}
+.fee-table tbody th small{display:block;font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:4px}
+.fee-table tbody td{text-align:right;padding:15px 0 15px 14px;border-bottom:1px solid var(--rule);
+  font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums;color:var(--ink-3);white-space:nowrap}
+.fee-table tbody td.ours{color:var(--accent);font-weight:500;font-size:14.5px}
+.fee-table tbody tr:last-child th,.fee-table tbody tr:last-child td{border-bottom:1px solid var(--ink)}
+.fnote{margin-top:16px;font-size:13.5px;line-height:1.65;color:var(--ink-3);max-width:66ch}
+.fnote sup{color:var(--accent);font-family:var(--mono)}
+.incl{margin:26px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:0}
+.incl li{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--rule);
+  font-size:15px;color:var(--ink-2);align-items:baseline}
+.incl li:first-child{border-top:1px solid var(--rule)}
+.incl li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent);transform:translateY(-2px)}
+
+/* ---------- enquiry ---------- */
+.quotebox{border:1px solid var(--rule-mid);border-radius:6px;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}
+@media (max-width:900px){.quotebox{grid-template-columns:1fr}}
+.qform{padding:clamp(22px,3.2vw,34px);background:var(--paper)}
+.qside{padding:clamp(22px,3.2vw,34px);background:var(--surface);border-left:1px solid var(--rule);display:flex;flex-direction:column;gap:14px}
+@media (max-width:900px){.qside{border-left:0;border-top:1px solid var(--rule)}}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:17px}
+.field label,.legend{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+.field input,.field select,.field textarea{font-family:var(--sans);font-size:15.5px;color:var(--ink);background:var(--paper);
+  border:1px solid var(--rule-mid);border-radius:3px;padding:10px 12px;width:100%;transition:border-color .2s var(--ease),box-shadow .2s var(--ease)}
+.field textarea{resize:vertical;min-height:76px;line-height:1.5}
+.field input::placeholder,.field textarea::placeholder{color:#A3A9B4;opacity:1}
+.field input:hover,.field select:hover,.field textarea:hover{border-color:var(--rule-strong)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-wash)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+@media (max-width:560px){.row2{grid-template-columns:1fr}}
+fieldset{border:0;padding:0;margin:0 0 18px;min-width:0}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:2px 16px;margin-top:11px}
+@media (max-width:560px){.checks{grid-template-columns:1fr}}
+.check{display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px 0;font-size:14.5px;color:var(--ink-2)}
+.check input{position:absolute;opacity:0;width:0;height:0}
+.check .box{width:15px;height:15px;border:1px solid var(--rule-strong);border-radius:2px;flex:none;position:relative;
+  background:var(--paper);transition:background .16s var(--ease),border-color .16s var(--ease)}
+.check .box::after{content:"";position:absolute;left:4.5px;top:1px;width:4px;height:8px;border:solid #fff;
+  border-width:0 1.6px 1.6px 0;transform:rotate(45deg) scale(0);transition:transform .16s var(--ease)}
+.check input:checked + .box{background:var(--accent);border-color:var(--accent)}
+.check input:checked + .box::after{transform:rotate(45deg) scale(1)}
+.check input:focus-visible + .box{outline:2px solid var(--accent);outline-offset:2px}
+.check:hover .box{border-color:var(--accent-mid)}
+.qside-title{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+pre.msg{margin:0;flex:1;min-height:216px;font-family:var(--mono);font-size:12.5px;line-height:1.85;color:var(--ink);
+  white-space:pre-wrap;overflow-wrap:anywhere;background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:16px}
+pre.msg .ph{color:#A3A9B4}
+.qside .btn{width:100%}
+.qside .alt{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);text-align:center;line-height:1.7}
+.qside .alt a{color:var(--ink-2)}
+
+/* ---------- faq ---------- */
+.faq{border-top:1px solid var(--rule-mid)}
+.faq details{border-bottom:1px solid var(--rule)}
+.faq summary{list-style:none;cursor:pointer;display:flex;align-items:flex-start;gap:16px;padding:20px 0;
+  font-family:var(--serif);font-size:19px;font-weight:400;color:var(--ink);transition:color .2s var(--ease)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:hover{color:var(--accent)}
+.faq summary .mk{flex:none;width:11px;height:11px;position:relative;margin-top:9px}
+.faq summary .mk::before,.faq summary .mk::after{content:"";position:absolute;background:var(--accent);
+  transition:transform .3s var(--ease)}
+.faq summary .mk::before{left:0;top:5px;width:11px;height:1px}
+.faq summary .mk::after{left:5px;top:0;width:1px;height:11px}
+.faq details[open] summary .mk::after{transform:scaleY(0)}
+.faq .ans{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s var(--ease)}
+.faq details[open] .ans{grid-template-rows:1fr}
+.faq .ans > div{overflow:hidden}
+.faq .ans p{padding:0 0 22px 27px;color:var(--ink-2);max-width:70ch;font-size:16px}
+@media (max-width:560px){.faq .ans p{padding-left:0}}
+
+/* ---------- closing ---------- */
+.closing{background:var(--ink);color:#fff;border-radius:6px;padding:clamp(34px,5.5vw,62px);
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:center}
+@media (max-width:760px){.closing{grid-template-columns:1fr}}
+.closing h2{color:#fff;font-size:clamp(26px,3.6vw,38px);font-weight:300}
+.closing p{margin-top:14px;color:#B9BDC7;font-size:16.5px;max-width:46ch}
+.closing .btn-solid{background:#fff;color:var(--ink);border-color:#fff}
+.closing .btn-solid:hover{background:#E8EAEE;border-color:#E8EAEE}
+.closing .btn-solid .wa{fill:var(--wa)}
+
+/* ---------- footer ---------- */
+.site-foot{border-top:1px solid var(--rule);margin-top:clamp(56px,8vw,88px);padding-block:40px 52px}
+.foot-grid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(2,minmax(0,1fr));gap:28px 40px}
+@media (max-width:700px){.foot-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:460px){.foot-grid{grid-template-columns:1fr}}
+.foot-col h4{font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.foot-col p,.foot-col a{font-size:14.5px;color:var(--ink-2);line-height:1.8}
+.foot-col a{display:block;text-decoration:none;width:fit-content;
+  background-image:linear-gradient(var(--ink-2),var(--ink-2));background-repeat:no-repeat;
+  background-position:0 100%;background-size:0 1px;transition:background-size .3s var(--ease),color .2s}
+.foot-col a:hover{color:var(--ink);background-size:100% 1px}
+.colophon{margin-top:40px;padding-top:22px;border-top:1px solid var(--rule);font-family:var(--mono);
+  font-size:11px;color:var(--ink-3);line-height:1.8;display:flex;flex-wrap:wrap;gap:6px 22px;justify-content:space-between}
+
+/* ---------- dock ---------- */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:70;display:none;gap:10px;
+  padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+  background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-top:1px solid var(--rule)}
+.dock .btn{flex:1}
+@media (max-width:640px){.dock{display:flex}body{padding-bottom:74px}}
+
+/* ---------- tooltip ---------- */
+.tip{position:fixed;z-index:90;pointer-events:none;opacity:0;transform:translate(-50%,-100%) translateY(-10px);
+  background:var(--ink);color:#fff;font-family:var(--mono);font-size:11.5px;line-height:1.55;
+  padding:7px 10px;border-radius:4px;white-space:nowrap;transition:opacity .15s var(--ease)}
+.tip.on{opacity:1}
+.tip b{color:#fff;font-weight:500}
+.tip span{color:#9DA3B0}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-delay:0ms !important;transition-duration:.001ms !important}
+  html{scroll-behavior:auto}
+}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+/* ---------- fact strip spacing + saving block ---------- */
+.fact + .fact{padding-left:28px}
+@media (max-width:640px){.fact + .fact{padding-left:0}}
+.saving{margin-top:30px;padding-top:24px;border-top:1px solid var(--rule)}
+.saving .sv{font-family:var(--serif);font-size:clamp(34px,4.6vw,46px);font-weight:300;color:var(--accent);line-height:1;font-variant-numeric:tabular-nums}
+.saving .sl{margin-top:10px;font-size:14.5px;color:var(--ink-3);max-width:38ch;line-height:1.55}
+</style>
+
+<a class="skip" href="#main">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><path id="wa-path" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01c-1.52 0-3.01-.41-4.31-1.18l-.31-.18-3.2.84.85-3.12-.2-.32a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.41a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.69 8.23-8.23 8.23Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.47c-.17 0-.43.06-.66.31-.22.25-.87.85-.87 2.07s.89 2.4 1.02 2.57c.12.16 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.11-.23-.17-.48-.29Z"/></defs></svg>
+
+<header class="site-head" id="site-head">
+  <div class="wrap head-in">
+    <a class="brand" href="#overview" aria-label="Stat Easy home">
+      <svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id="gS" x1="6" y1="6" x2="48" y2="46" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#5B5BF5"/><stop offset="1" stop-color="#E85FC0"/>
+          </linearGradient>
+          <linearGradient id="gE" x1="26" y1="24" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#FF8A3D"/><stop offset="1" stop-color="#F5291B"/>
+          </linearGradient>
+        </defs>
+        <text x="0" y="43" font-family="Newsreader, Georgia, serif" font-size="50" font-weight="400" fill="url(#gS)">S</text>
+        <text x="27" y="53" font-family="Newsreader, Georgia, serif" font-size="44" font-weight="400" fill="url(#gE)">e</text>
+        <rect x="2" y="54" width="3.5" height="7" fill="#5B5BF5"/>
+        <rect x="8" y="49" width="3.5" height="12" fill="#8B5CF6"/>
+        <rect x="14" y="52" width="3.5" height="9" fill="#2B2F86"/>
+      </svg>
+      <span class="brand-name">Stat Easy</span>
+    </a>
+    <nav class="head-nav" aria-label="Primary">
+      <a href="#services">Services</a>
+      <a href="#output">Output</a>
+      <a href="#process">Process</a>
+      <a href="#fees">Fees</a>
+    </nav>
+    <a class="btn btn-solid btn-sm" href="#enquiry">Request a quote</a>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Section index">
+  <ol>
+    <li><a href="#overview"><span class="tick"></span>Overview</a></li>
+    <li><a href="#approach"><span class="tick"></span>Approach</a></li>
+    <li><a href="#services"><span class="tick"></span>Services</a></li>
+    <li><a href="#output"><span class="tick"></span>Output</a></li>
+    <li><a href="#process"><span class="tick"></span>Process</a></li>
+    <li><a href="#fees"><span class="tick"></span>Fees</a></li>
+    <li><a href="#enquiry"><span class="tick"></span>Enquiry</a></li>
+  </ol>
+</nav>
+
+<main id="main">
+
+<!-- ========== OVERVIEW ========== -->
+<section class="sec hero" id="overview">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="kicker rise rise-1">Statistical analysis &middot; Student research</p>
+      <h1 class="rise rise-2">Clear statistics.<br><em>Student budgets.</em></h1>
+      <p class="hero-sub rise rise-3">You collect the data. Stat Easy runs the analysis, builds the tables and figures your dissertation needs, and <b>explains every result back to you</b> &mdash; so the work you defend is genuinely your own.</p>
+      <div class="hero-cta rise rise-4">
+        <a class="btn btn-solid" href="https://wa.me/917014870806?text=Hi%20Stat%20Easy%2C%20I%27d%20like%20a%20quote%20for%20statistical%20analysis.%20My%20study%20is%20about%3A%20" target="_blank" rel="noopener">
+          <svg class="wa" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01c-1.52 0-3.01-.41-4.31-1.18l-.31-.18-3.2.84.85-3.12-.2-.32a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.41a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.69 8.23-8.23 8.23Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.47c-.17 0-.43.06-.66.31-.22.25-.87.85-.87 2.07s.89 2.4 1.02 2.57c.12.16 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.11-.23-.17-.48-.29Z"/></svg>
+          Message on WhatsApp
+        </a>
+        <a class="btn btn-line" href="#fees">See fees</a>
+      </div>
+      <p class="hero-meta rise rise-5">Founded by Tilak, a final-year student and researcher, along with Tilak Raj and Gayatri Prajapati (MSc Statistics, former YIP, Govt. of Rajasthan)<br>Five projects taken on each month</p>
+    </div>
+
+    <figure class="fig">
+      <svg viewBox="0 0 460 300" role="img" aria-labelledby="fig1t">
+        <title id="fig1t">Illustrative scatter plot with a fitted linear regression line showing a positive association</title>
+        <g class="ax-grid">
+          <line x1="50" y1="192.5" x2="444" y2="192.5"/>
+          <line x1="50" y1="133" x2="444" y2="133"/>
+          <line x1="50" y1="73.5" x2="444" y2="73.5"/>
+          <line x1="50" y1="14" x2="444" y2="14"/>
+        </g>
+        <g class="ax-line">
+          <line x1="50" y1="14" x2="50" y2="252"/>
+          <line x1="50" y1="252" x2="444" y2="252"/>
+        </g>
+        <g class="ax-txt" text-anchor="end">
+          <text x="42" y="256">0</text><text x="42" y="196.5">25</text><text x="42" y="137">50</text>
+          <text x="42" y="77.5">75</text><text x="42" y="18">100</text>
+        </g>
+        <g class="ax-txt" text-anchor="middle">
+          <text x="50" y="269">0</text><text x="148.5" y="269">25</text><text x="247" y="269">50</text>
+          <text x="345.5" y="269">75</text><text x="444" y="269">100</text>
+        </g>
+        <text class="ax-title" x="247" y="291" text-anchor="middle">Exposure variable</text>
+        <text class="ax-title" x="14" y="133" text-anchor="middle" transform="rotate(-90 14 133)">Outcome measure</text>
+        <polygon class="fit-band" points="65.8,195.8 428.2,35.9 428.2,55.9 65.8,215.8"/>
+        <path class="fit" d="M 65.8 205.8 L 428.2 45.9"/>
+        <g class="pts">
+          <circle class="pt" style="--i:0" data-x="8" data-y="26" cx="81.5" cy="190.1" r="4.5"/>
+          <circle class="pt" style="--i:1" data-x="12" data-y="19" cx="97.3" cy="206.8" r="4.5"/>
+          <circle class="pt" style="--i:2" data-x="17" data-y="34" cx="117.0" cy="171.1" r="4.5"/>
+          <circle class="pt" style="--i:3" data-x="21" data-y="25" cx="132.7" cy="192.5" r="4.5"/>
+          <circle class="pt" style="--i:4" data-x="25" data-y="42" cx="148.5" cy="152.0" r="4.5"/>
+          <circle class="pt" style="--i:5" data-x="29" data-y="32" cx="164.3" cy="175.8" r="4.5"/>
+          <circle class="pt" style="--i:6" data-x="33" data-y="49" cx="180.0" cy="135.4" r="4.5"/>
+          <circle class="pt" style="--i:7" data-x="36" data-y="37" cx="191.8" cy="163.9" r="4.5"/>
+          <circle class="pt" style="--i:8" data-x="41" data-y="53" cx="211.5" cy="125.9" r="4.5"/>
+          <circle class="pt" style="--i:9" data-x="45" data-y="43" cx="227.3" cy="149.7" r="4.5"/>
+          <circle class="pt" style="--i:10" data-x="48" data-y="62" cx="239.1" cy="104.4" r="4.5"/>
+          <circle class="pt" style="--i:11" data-x="52" data-y="49" cx="254.9" cy="135.4" r="4.5"/>
+          <circle class="pt" style="--i:12" data-x="56" data-y="67" cx="270.6" cy="92.5" r="4.5"/>
+          <circle class="pt" style="--i:13" data-x="60" data-y="56" cx="286.4" cy="118.7" r="4.5"/>
+          <circle class="pt" style="--i:14" data-x="64" data-y="73" cx="302.2" cy="78.3" r="4.5"/>
+          <circle class="pt" style="--i:15" data-x="68" data-y="61" cx="317.9" cy="106.8" r="4.5"/>
+          <circle class="pt" style="--i:16" data-x="72" data-y="80" cx="333.7" cy="61.6" r="4.5"/>
+          <circle class="pt" style="--i:17" data-x="76" data-y="67" cx="349.4" cy="92.5" r="4.5"/>
+          <circle class="pt" style="--i:18" data-x="80" data-y="85" cx="365.2" cy="49.7" r="4.5"/>
+          <circle class="pt" style="--i:19" data-x="85" data-y="73" cx="384.9" cy="78.3" r="4.5"/>
+          <circle class="pt" style="--i:20" data-x="89" data-y="92" cx="400.7" cy="33.0" r="4.5"/>
+          <circle class="pt" style="--i:21" data-x="94" data-y="81" cx="420.4" cy="59.2" r="4.5"/>
+        </g>
+        <text class="ax-txt fig-note" x="352" y="228" text-anchor="start" style="fill:#2B2F86">r = 0.94</text>
+        <text class="ax-txt fig-note" x="352" y="243" text-anchor="start">p &lt; 0.001</text>
+      </svg>
+      <figcaption><b>Fig. 1</b> &mdash; Illustrative scatter with fitted regression line and 95% confidence band. Hover a point to read its values.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="facts">
+    <div class="fact"><div class="v">&#8377;2,500</div><div class="l">Starting fee. Typical range &#8377;2,500&ndash;3,500, set by sample size and complexity.</div></div>
+    <div class="fact"><div class="v">5</div><div class="l">Projects taken on each month, so every dataset gets proper attention.</div></div>
+    <div class="fact"><div class="v">Fixed</div><div class="l">Your quote is agreed in writing before any work begins, and does not move.</div></div>
+  </div>
+</div>
+
+<!-- ========== APPROACH ========== -->
+<section class="sec" id="approach">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">Approach</p>
+      <h2>Analysis is where good student research stalls.</h2>
+    </div>
+    <div class="statement">
+      <div>
+        <p>Most student projects are not let down by the question or the fieldwork. They are let down at the point where a spreadsheet of raw responses has to become a defensible results chapter &mdash; the wrong test chosen because it was the one available, a table that a reviewer sends back, a figure that cannot be read once it is printed.</p>
+        <p>Stat Easy exists to take that step seriously without pricing it out of reach. Every test is chosen for the data and the objectives, written up so it can go straight into a methods section, and explained until the researcher can answer for it without help.</p>
+      </div>
+      <div class="pullquote">
+        <blockquote>&ldquo;I am a final-year student and a researcher myself. I started Stat Easy because the going rate for analysis is <em>more than most students can pay</em> &mdash; that money is better spent on conferences and good journal publication.&rdquo;</blockquote>
+        <p class="attrib"><b>Tilak</b><br>Founder, Stat Easy<br><span style="font-weight:400">with Tilak Raj &amp; Gayatri Prajapati (MSc Statistics, former YIP, Govt. of Rajasthan)</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SERVICES ========== -->
+<section class="sec" id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">Services</p>
+      <h2>Everything between your raw data and your results chapter.</h2>
+      <p class="lede">Commission the whole set, or only the part you are stuck on.</p>
+    </div>
+    <div class="svc">
+      <article class="svc-row">
+        <h3>Questionnaire validation</h3>
+        <div>
+          <p>Before a single response is collected, your instrument is checked to confirm it measures what you say it measures &mdash; and that a reviewer will accept it.</p>
+          <p class="svc-methods">content validity &middot; face validity &middot; Cronbach's &alpha; &middot; test&ndash;retest reliability &middot; pilot data</p>
+        </div>
+      </article>
+      <article class="svc-row">
+        <h3>Statistical analysis</h3>
+        <div>
+          <p>The right test for your data and your objectives, not the most convenient one. Every choice is justified, so it can be written into your methods section and defended in a viva.</p>
+          <p class="svc-methods">descriptives &middot; normality testing &middot; t&#8209;test &middot; ANOVA &middot; chi&#8209;square &middot; Mann&ndash;Whitney &middot; correlation &middot; regression &middot; survival analysis</p>
+        </div>
+      </article>
+      <article class="svc-row">
+        <h3>Tables</h3>
+        <div>
+          <p>Journal-format tables that go straight into the dissertation &mdash; baseline characteristics, outcome comparisons, p&#8209;values reported to convention.</p>
+          <p class="svc-methods">Table 1 baseline characteristics &middot; three-line academic format &middot; editable document</p>
+        </div>
+      </article>
+      <article class="svc-row">
+        <h3>Graphs and charts</h3>
+        <div>
+          <p>Figures that stay labelled, captioned and legible once printed &mdash; sized and exported for a thesis, a poster or a slide, whichever is needed.</p>
+          <p class="svc-methods">bar &middot; box &middot; scatter with fit &middot; forest &middot; survival curves &middot; high-resolution export</p>
+        </div>
+      </article>
+      <article class="svc-row">
+        <h3>Digital data-collection forms</h3>
+        <div>
+          <p>Your proforma built as a digital form so the data arrives analysis-ready: coded responses, validation on every field, and no re-typing two hundred paper sheets at midnight.</p>
+          <p class="svc-methods">coded response options &middot; field validation &middot; clean export sheet</p>
+        </div>
+      </article>
+      <article class="svc-row">
+        <h3>Pictographs and visual summaries</h3>
+        <div>
+          <p>Infographic-style visuals for presentations, posters and conference slides, for the moments when a table will not hold a room's attention.</p>
+          <p class="svc-methods">study flow &middot; sample profile &middot; key-finding graphics</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ========== OUTPUT ========== -->
+<section class="sec" id="output">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">Output</p>
+      <h2>What actually lands in your inbox.</h2>
+      <p class="lede">Not a screenshot of software output. Finished, formatted material that goes into the dissertation as it is.</p>
+    </div>
+
+    <div class="specimen">
+      <div class="spec-tabs" role="tablist" aria-label="Specimen output">
+        <button role="tab" id="tab-table" aria-controls="panel-table" aria-selected="true">Table 1</button>
+        <button role="tab" id="tab-figure" aria-controls="panel-figure" aria-selected="false" tabindex="-1">Figure</button>
+        <button role="tab" id="tab-methods" aria-controls="panel-methods" aria-selected="false" tabindex="-1">Methods text</button>
+        <span class="tab-ink" aria-hidden="true"></span>
+      </div>
+      <div class="spec-body">
+        <div class="spec-panel is-on" role="tabpanel" id="panel-table" aria-labelledby="tab-table" tabindex="0">
+          <span class="stamp">Specimen &middot; illustrative data</span>
+          <p class="spec-cap"><b>Table 1.</b> Baseline characteristics of participants by dietary pattern (n = 223)</p>
+          <div class="t1-scroll">
+            <table class="t1">
+              <thead>
+                <tr>
+                  <th scope="col">Characteristic</th>
+                  <th scope="col">Vegetarian<small>n = 64</small></th>
+                  <th scope="col">Mixed<small>n = 88</small></th>
+                  <th scope="col">Non-vegetarian<small>n = 71</small></th>
+                  <th scope="col">p</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Age, years</th><td>20.8 &plusmn; 1.4</td><td>21.1 &plusmn; 1.6</td><td>20.9 &plusmn; 1.5</td><td>0.412</td></tr>
+                <tr><th scope="row">Female, n (%)</th><td>38 (59.4)</td><td>47 (53.4)</td><td>33 (46.5)</td><td>0.318</td></tr>
+                <tr><th scope="row">BMI, kg/m&sup2;</th><td>21.6 &plusmn; 2.8</td><td>22.9 &plusmn; 3.1</td><td>23.4 &plusmn; 3.0</td><td class="sig">0.004</td></tr>
+                <tr><th scope="row">Haemoglobin, g/dL</th><td>11.4 &plusmn; 1.3</td><td>12.6 &plusmn; 1.2</td><td>13.1 &plusmn; 1.4</td><td class="sig">&lt; 0.001</td></tr>
+                <tr><th scope="row">Anaemia, n (%)</th><td>29 (45.3)</td><td>21 (23.9)</td><td>12 (16.9)</td><td class="sig">&lt; 0.001</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="spec-foot">Values are mean &plusmn; SD or n (%). p-values from one-way ANOVA for continuous variables and Pearson's chi-square for categorical variables. Figures shown are illustrative and are not from a real study.</p>
+        </div>
+
+        <div class="spec-panel" role="tabpanel" id="panel-figure" aria-labelledby="tab-figure" tabindex="0">
+          <span class="stamp">Specimen &middot; illustrative data</span>
+          <p class="spec-cap"><b>Fig. 2.</b> Mean haemoglobin concentration by dietary pattern, with 95% confidence intervals</p>
+          <figure class="fig">
+            <svg viewBox="0 0 460 300" role="img" aria-labelledby="fig2t">
+              <title id="fig2t">Bar chart of mean haemoglobin by dietary pattern with 95 percent confidence intervals</title>
+              <g class="ax-grid">
+                <line x1="52" y1="187.5" x2="440" y2="187.5"/>
+                <line x1="52" y1="131" x2="440" y2="131"/>
+                <line x1="52" y1="74.5" x2="440" y2="74.5"/>
+                <line x1="52" y1="18" x2="440" y2="18"/>
+              </g>
+              <g class="ax-line"><line x1="52" y1="18" x2="52" y2="244"/><line x1="52" y1="244" x2="440" y2="244"/></g>
+              <g class="ax-txt" text-anchor="end">
+                <text x="44" y="248">0</text><text x="44" y="191.5">4</text><text x="44" y="135">8</text>
+                <text x="44" y="78.5">12</text><text x="44" y="22">16</text>
+              </g>
+              <text class="ax-title" x="14" y="131" text-anchor="middle" transform="rotate(-90 14 131)">Haemoglobin (g/dL)</text>
+              <g class="bar-g" style="--i:0" data-name="Vegetarian" data-val="11.4 g/dL" data-ci="95% CI 10.9-11.9">
+                <rect class="bar" x="78.7" y="83.0" width="76" height="161"/>
+                <path class="err" d="M116.7 75.6 V90.3 M108.7 75.6 H124.7 M108.7 90.3 H124.7"/>
+                <text class="val-lab" x="116.7" y="66" text-anchor="middle">11.4</text>
+              </g>
+              <g class="bar-g" style="--i:1" data-name="Mixed" data-val="12.6 g/dL" data-ci="95% CI 12.2-13.0">
+                <rect class="bar" x="208.0" y="66.0" width="76" height="178"/>
+                <path class="err" d="M246 60.2 V71.8 M238 60.2 H254 M238 71.8 H254"/>
+                <text class="val-lab" x="246" y="50" text-anchor="middle">12.6</text>
+              </g>
+              <g class="bar-g" style="--i:2" data-name="Non-vegetarian" data-val="13.1 g/dL" data-ci="95% CI 12.6-13.6">
+                <rect class="bar" x="337.3" y="59.0" width="76" height="185"/>
+                <path class="err" d="M375.3 52.3 V65.6 M367.3 52.3 H383.3 M367.3 65.6 H383.3"/>
+                <text class="val-lab" x="375.3" y="43" text-anchor="middle">13.1</text>
+              </g>
+              <g class="ax-txt" text-anchor="middle">
+                <text x="116.7" y="262">Vegetarian</text><text x="116.7" y="277" style="fill:#9DA3B0">n = 64</text>
+                <text x="246" y="262">Mixed</text><text x="246" y="277" style="fill:#9DA3B0">n = 88</text>
+                <text x="375.3" y="262">Non-vegetarian</text><text x="375.3" y="277" style="fill:#9DA3B0">n = 71</text>
+              </g>
+            </svg>
+          </figure>
+          <p class="spec-foot">Error bars show 95% confidence intervals. Exported at 300 dpi, sized for a thesis page. Figures shown are illustrative and are not from a real study.</p>
+        </div>
+
+        <div class="spec-panel" role="tabpanel" id="panel-methods" aria-labelledby="tab-methods" tabindex="0">
+          <span class="stamp">Specimen &middot; illustrative text</span>
+          <p class="spec-cap"><b>Statistical analysis</b> &mdash; a paragraph written to drop into your methods section</p>
+          <p style="font-size:16px;color:var(--ink-2);max-width:70ch">Data were entered into a spreadsheet, checked for completeness and analysed using standard statistical software. Continuous variables are summarised as mean &plusmn; standard deviation and categorical variables as frequencies with percentages. The Shapiro&ndash;Wilk test was used to assess normality of distribution. Continuous variables were compared across the three dietary groups using one-way analysis of variance, with the Kruskal&ndash;Wallis test applied where the assumption of normality was not met. Categorical variables were compared using Pearson's chi-square test. A two-sided p-value below 0.05 was taken as statistically significant.</p>
+          <p class="spec-foot">The software named in your own paragraph is set to whatever your department requires. Written so you can describe your own methods accurately, in your own viva.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PROCESS ========== -->
+<section class="sec" id="process">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">Process</p>
+      <h2>How a project runs.</h2>
+      <p class="lede">Four stages &mdash; and the price is settled before the third.</p>
+    </div>
+    <div class="steps" id="steps">
+      <div class="step">
+        <p class="n">Stage 01</p>
+        <h3>Tell us the study</h3>
+        <p>Objectives, design, sample size and submission date. A message on WhatsApp is enough to begin.</p>
+      </div>
+      <div class="step">
+        <p class="n">Stage 02</p>
+        <h3>Receive a fixed quote</h3>
+        <p>Which analyses the objectives genuinely require, what it costs, and when it lands. Nothing starts until you agree.</p>
+      </div>
+      <div class="step">
+        <p class="n">Stage 03</p>
+        <h3>Analysis and output</h3>
+        <p>Cleaning, then the tests, then the tables and figures &mdash; delivered in a form that goes straight into the thesis.</p>
+      </div>
+      <div class="step">
+        <p class="n">Stage 04</p>
+        <h3>A walk through the results</h3>
+        <p>What every result means, in plain language, with revisions if your guide asks for changes. You should be able to defend each number.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FEES ========== -->
+<section class="sec" id="fees">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">Fees</p>
+      <h2>Roughly half the going rate.</h2>
+      <p class="lede">No student should have to choose between a proper analysis and a month of expenses.</p>
+    </div>
+
+    <div class="fees">
+      <div>
+        <figure class="fig" style="margin:0">
+          <div class="barchart" id="barchart">
+            <div class="brow">
+              <div class="blab"><span class="bname">Usual market rate</span><span class="bval">&#8377;6,000&ndash;7,000</span></div>
+              <div class="btrack"><div class="bfill" style="width:92.9%"></div></div>
+            </div>
+            <div class="brow ours">
+              <div class="blab"><span class="bname">Stat Easy</span><span class="bval">&#8377;2,500&ndash;3,500</span></div>
+              <div class="btrack"><div class="bfill" style="width:42.9%"></div></div>
+            </div>
+            <div class="bscale"><span>&#8377;0</span><span>&#8377;7,000</span></div>
+          </div>
+          <figcaption><b>Fig. 3</b> &mdash; MD/MS thesis analysis. Bar length shows the midpoint of each range (&#8377;6,500 and &#8377;3,000).</figcaption>
+        </figure>
+
+        <div class="saving">
+          <div class="sv" id="saving" data-count="3500">&#8377;3,500</div>
+          <div class="sl">Typical saving on an MD or MS thesis analysis, comparing the midpoint of each range.</div>
+        </div>
+      </div>
+
+      <div>
+        <table class="fee-table">
+          <caption>Cost of statistical analysis, in &#8377;</caption>
+          <thead>
+            <tr><th scope="col">Project type</th><th scope="col">Market rate<sup>a</sup></th><th scope="col">Stat Easy</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">MD / MS thesis<small>full dissertation analysis</small></th>
+              <td>6,000 &ndash; 7,000</td><td class="ours">2,500 &ndash; 3,500</td>
+            </tr>
+            <tr>
+              <th scope="row">Student research project<small>UG, PG, ICMR&#8209;STS, electives</small></th>
+              <td>4,000 &ndash; 5,000</td><td class="ours">2,500 &ndash; 3,500</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="fnote"><sup>a</sup> Indicative of rates commonly quoted to student researchers. Your own price depends on sample size and the complexity of the analysis; it is fixed in writing before any work begins and does not move afterwards.</p>
+        <ul class="incl">
+          <li>Cleaning and coding of the raw data sheet</li>
+          <li>Test selection justified for your methods section</li>
+          <li>Thesis-ready tables and labelled figures</li>
+          <li>A plain-language walkthrough of the results</li>
+          <li>Revisions where your guide asks for changes</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== ENQUIRY ========== -->
+<section class="sec" id="enquiry">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">Enquiry</p>
+      <h2>Build your quote.</h2>
+      <p class="lede">Fill this in and it becomes a ready-to-send message. Nothing is stored on this page, and nothing is sent until you choose to send it.</p>
+    </div>
+
+    <div class="quotebox">
+      <form class="qform" id="quote-form">
+        <div class="row2">
+          <div class="field">
+            <label for="q-name">Your name</label>
+            <input id="q-name" name="name" type="text" placeholder="Ananya R.">
+          </div>
+          <div class="field">
+            <label for="q-course">Course and year</label>
+            <input id="q-course" name="course" type="text" placeholder="MBBS, final year">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="q-topic">Study topic or objectives</label>
+          <textarea id="q-topic" name="topic" placeholder="Prevalence of anaemia among first-year medical students and its association with dietary pattern"></textarea>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label for="q-design">Study design</label>
+            <select id="q-design" name="design">
+              <option value="">Select</option>
+              <option>Cross-sectional</option>
+              <option>Case&ndash;control</option>
+              <option>Cohort</option>
+              <option>Interventional / RCT</option>
+              <option>Questionnaire-based survey</option>
+              <option>Retrospective record review</option>
+              <option>Not decided yet</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="q-n">Sample size</label>
+            <input id="q-n" name="n" type="text" inputmode="numeric" placeholder="120">
+          </div>
+        </div>
+
+        <fieldset>
+          <span class="legend">What do you need?</span>
+          <div class="checks">
+            <label class="check"><input type="checkbox" class="need" id="need-1" value="Questionnaire validation"><span class="box"></span>Questionnaire validation</label>
+            <label class="check"><input type="checkbox" class="need" id="need-2" value="Statistical analysis" checked><span class="box"></span>Statistical analysis</label>
+            <label class="check"><input type="checkbox" class="need" id="need-3" value="Tables"><span class="box"></span>Tables</label>
+            <label class="check"><input type="checkbox" class="need" id="need-4" value="Graphs and charts"><span class="box"></span>Graphs and charts</label>
+            <label class="check"><input type="checkbox" class="need" id="need-5" value="Digital data-collection form"><span class="box"></span>Digital form</label>
+            <label class="check"><input type="checkbox" class="need" id="need-6" value="Pictographs"><span class="box"></span>Pictographs</label>
+          </div>
+        </fieldset>
+
+        <div class="row2">
+          <div class="field">
+            <label for="q-date">Submission deadline</label>
+            <input id="q-date" name="deadline" type="date">
+          </div>
+          <div class="field">
+            <label for="q-status">Data status</label>
+            <select id="q-status" name="status">
+              <option value="">Select</option>
+              <option>Collection not started</option>
+              <option>Collection in progress</option>
+              <option>Collected, in a spreadsheet</option>
+              <option>Collected, on paper proformas</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field" style="margin-bottom:0">
+          <label for="q-notes">Anything else</label>
+          <textarea id="q-notes" name="notes" placeholder="Your guide's requirements, journal format, the software your department expects"></textarea>
+        </div>
+      </form>
+
+      <div class="qside">
+        <span class="qside-title">Your message</span>
+        <pre class="msg" id="msg-preview" aria-live="polite"></pre>
+        <a class="btn btn-accent" id="send-wa" href="https://wa.me/917014870806" target="_blank" rel="noopener">
+          <svg class="wa" viewBox="0 0 24 24" aria-hidden="true" style="fill:#fff"><use href="#wa-path"/></svg>
+          Send on WhatsApp
+        </a>
+        <p class="alt">or call <a href="tel:+917014870806">+91 70148 70806</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FAQ ========== -->
+<section class="sec" id="faq-sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">Questions</p>
+      <h2>What students ask before they commit.</h2>
+    </div>
+    <div class="faq">
+      <details open>
+        <summary><span class="mk" aria-hidden="true"></span>What do you need from me to start?</summary>
+        <div class="ans"><div><p>Your objectives, your study design and your data. A spreadsheet is ideal, but a scan of a paper proforma or a form export works too. If nothing has been collected yet, get in touch earlier rather than later &mdash; the decisions taken before data collection are the ones that save a study.</p></div></div>
+      </details>
+      <details>
+        <summary><span class="mk" aria-hidden="true"></span>How long does it take?</summary>
+        <div class="ans"><div><p>It depends on the size of the dataset and how much cleaning it needs. The delivery date is agreed with you before work starts, so give us your submission deadline up front &mdash; if it cannot honestly be met, we say so rather than take the project.</p></div></div>
+      </details>
+      <details>
+        <summary><span class="mk" aria-hidden="true"></span>Will I be able to explain the results myself?</summary>
+        <div class="ans"><div><p>That is the point of the last stage. Every project ends with a walkthrough of what each test was for and what the numbers mean, in plain language. Nobody should be standing in front of an examiner reading out a figure they do not understand.</p></div></div>
+      </details>
+      <details>
+        <summary><span class="mk" aria-hidden="true"></span>Is this ethical? Isn't the analysis my own work?</summary>
+        <div class="ans"><div><p>Statistical support is a normal and declarable part of research &mdash; the same role a statistician plays on any published paper. Stat Easy handles the analysis and the output; the study, the interpretation and the writing remain yours, and the methods are always explained so you can describe them accurately.</p></div></div>
+      </details>
+      <details>
+        <summary><span class="mk" aria-hidden="true"></span>What if my guide asks for changes?</summary>
+        <div class="ans"><div><p>Revisions within the agreed scope are included. If your guide asks for an additional analysis that was not among the original objectives, it is quoted separately before anything is done.</p></div></div>
+      </details>
+      <details>
+        <summary><span class="mk" aria-hidden="true"></span>Why only five projects a month?</summary>
+        <div class="ans"><div><p>Because Stat Easy is run by a student who is also finishing a degree, and a rushed analysis is worse than none. Five is what can be done properly. Slots for a given month tend to go early, so ask before the deadline is close.</p></div></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CLOSING ========== -->
+<section class="sec" id="contact" style="border-top:0;padding-top:0">
+  <div class="wrap">
+    <div class="closing">
+      <div>
+        <h2>Send the study. Get a straight answer.</h2>
+        <p>Tell us what you are researching and where you are stuck. The quote costs nothing, and you will know exactly what you are paying for.</p>
+      </div>
+      <a class="btn btn-solid" href="https://wa.me/917014870806?text=Hi%20Stat%20Easy%2C%20I%27d%20like%20a%20quote%20for%20statistical%20analysis.%20My%20study%20is%20about%3A%20" target="_blank" rel="noopener">
+        <svg class="wa" viewBox="0 0 24 24" aria-hidden="true"><use href="#wa-path"/></svg>
+        Message Stat Easy
+      </a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <h4>Stat Easy</h4>
+        <p>Statistical analysis for student researchers. Five projects a month, founded and run by Tilak.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Contact</h4>
+        <a href="https://wa.me/917014870806" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="tel:+917014870806">+91 70148 70806</a>
+        <a href="https://www.linkedin.com/company/stat-easy-statistics-for-medicos/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <div class="foot-col">
+        <h4>Sections</h4>
+        <a href="#services">Services</a>
+        <a href="#output">Specimen output</a>
+        <a href="#fees">Fees</a>
+        <a href="#enquiry">Request a quote</a>
+      </div>
+    </div>
+    <div class="colophon">
+      <span>&copy; <span id="yr">2026</span> Stat Easy</span>
+      <span>Statistical support, not authorship &mdash; your research remains your own.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="dock">
+  <a class="btn btn-line btn-sm" href="#enquiry">Build a quote</a>
+  <a class="btn btn-solid btn-sm" href="https://wa.me/917014870806?text=Hi%20Stat%20Easy%2C%20I%27d%20like%20a%20quote%20for%20statistical%20analysis." target="_blank" rel="noopener">
+    <svg class="wa" viewBox="0 0 24 24" aria-hidden="true"><use href="#wa-path"/></svg>
+    WhatsApp
+  </a>
+</div>
+
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+  var PHONE = "917014870806";
+  var animOK = document.documentElement.classList.contains("anim");
+  var yr = document.getElementById("yr");
+  if (yr) { yr.textContent = new Date().getFullYear(); }
+
+  /* ---- sticky header rule ---- */
+  var head = document.getElementById("site-head");
+  function onScroll(){
+    if (head) { head.classList.toggle("is-scrolled", window.scrollY > 8); }
+  }
+  window.addEventListener("scroll", onScroll, { passive:true });
+  onScroll();
+
+  /* ---- section index rail ---- */
+  var railLinks = Array.prototype.slice.call(document.querySelectorAll(".rail a"));
+  var sections = railLinks.map(function(a){ return document.querySelector(a.getAttribute("href")); });
+  if (railLinks.length && "IntersectionObserver" in window) {
+    var railObs = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) { return; }
+        var i = sections.indexOf(en.target);
+        railLinks.forEach(function(a, k){ a.classList.toggle("is-active", k === i); });
+      });
+    }, { rootMargin:"-45% 0px -50% 0px" });
+    sections.forEach(function(s){ if (s) { railObs.observe(s); } });
+  }
+
+  /* ---- reveal on view: process connector, price bars, specimen bars ---- */
+  function revealOnView(el){
+    if (!el) { return; }
+    if (!animOK || !("IntersectionObserver" in window)) { el.classList.add("in"); return; }
+    var obs = new IntersectionObserver(function(entries, o){
+      entries.forEach(function(en){
+        if (en.isIntersecting) { en.target.classList.add("in"); o.unobserve(en.target); }
+      });
+    }, { threshold:0.35 });
+    obs.observe(el);
+  }
+  revealOnView(document.getElementById("steps"));
+  revealOnView(document.getElementById("barchart"));
+  Array.prototype.forEach.call(document.querySelectorAll("#panel-figure .bar-g"), revealOnView);
+
+  /* ---- count up the saving figure ---- */
+  var saving = document.getElementById("saving");
+  if (saving) {
+    var target = parseInt(saving.getAttribute("data-count"), 10);
+    var fmt = function(n){ return "\u20B9" + n.toLocaleString("en-IN"); };
+    if (!animOK || !("IntersectionObserver" in window)) {
+      saving.textContent = fmt(target);
+    } else {
+      var svObs = new IntersectionObserver(function(entries, o){
+        entries.forEach(function(en){
+          if (!en.isIntersecting) { return; }
+          o.unobserve(en.target);
+          var t0 = null, dur = 1100;
+          var tick = function(ts){
+            if (t0 === null) { t0 = ts; }
+            var p = Math.min((ts - t0) / dur, 1);
+            var eased = 1 - Math.pow(1 - p, 3);
+            saving.textContent = fmt(Math.round(target * eased / 50) * 50);
+            if (p < 1) { requestAnimationFrame(tick); } else { saving.textContent = fmt(target); }
+          };
+          requestAnimationFrame(tick);
+        });
+      }, { threshold:0.6 });
+      svObs.observe(saving);
+    }
+  }
+
+  /* ---- specimen tabs ---- */
+  var tablist = document.querySelector(".spec-tabs");
+  if (tablist) {
+    var tabs = Array.prototype.slice.call(tablist.querySelectorAll("[role=tab]"));
+    var inkBar = tablist.querySelector(".tab-ink");
+    function moveInk(tab){
+      if (!inkBar) { return; }
+      inkBar.style.width = tab.offsetWidth + "px";
+      inkBar.style.transform = "translateX(" + tab.offsetLeft + "px)";
+    }
+    function select(tab, focus){
+      tabs.forEach(function(t){
+        var on = t === tab;
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        t.tabIndex = on ? 0 : -1;
+        var panel = document.getElementById(t.getAttribute("aria-controls"));
+        if (panel) { panel.classList.toggle("is-on", on); }
+      });
+      moveInk(tab);
+      if (focus) { tab.focus(); }
+      Array.prototype.forEach.call(document.querySelectorAll("#panel-figure .bar-g"), function(g){ g.classList.add("in"); });
+    }
+    tabs.forEach(function(t){ t.addEventListener("click", function(){ select(t, false); }); });
+    tablist.addEventListener("keydown", function(e){
+      var i = tabs.indexOf(document.activeElement);
+      if (i < 0) { return; }
+      if (e.key === "ArrowRight") { e.preventDefault(); select(tabs[(i + 1) % tabs.length], true); }
+      if (e.key === "ArrowLeft")  { e.preventDefault(); select(tabs[(i - 1 + tabs.length) % tabs.length], true); }
+    });
+    moveInk(tabs[0]);
+    window.addEventListener("resize", function(){
+      var cur = tablist.querySelector("[aria-selected=true]");
+      if (cur) { moveInk(cur); }
+    });
+  }
+
+  /* ---- chart tooltips ---- */
+  var tip = document.getElementById("tip");
+  function showTip(html, e){
+    if (!tip) { return; }
+    tip.innerHTML = html;
+    tip.style.left = e.clientX + "px";
+    tip.style.top = e.clientY + "px";
+    tip.classList.add("on");
+  }
+  function hideTip(){ if (tip) { tip.classList.remove("on"); } }
+  Array.prototype.forEach.call(document.querySelectorAll(".pt"), function(pt){
+    pt.addEventListener("mousemove", function(e){
+      showTip("<b>x " + pt.getAttribute("data-x") + "</b> &nbsp; <b>y " + pt.getAttribute("data-y") + "</b>", e);
+    });
+    pt.addEventListener("mouseleave", hideTip);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll(".bar-g"), function(g){
+    g.addEventListener("mousemove", function(e){
+      showTip("<b>" + g.getAttribute("data-name") + "</b><br><span>mean</span> " + g.getAttribute("data-val") + "<br><span>" + g.getAttribute("data-ci") + "</span>", e);
+    });
+    g.addEventListener("mouseleave", hideTip);
+  });
+  window.addEventListener("scroll", hideTip, { passive:true });
+
+  /* ---- quote builder -> WhatsApp message ---- */
+  var form = document.getElementById("quote-form");
+  var pre = document.getElementById("msg-preview");
+  var send = document.getElementById("send-wa");
+  if (!form || !pre || !send) { return; }
+
+  function val(id){
+    var el = document.getElementById(id);
+    return el && el.value ? el.value.trim() : "";
+  }
+  function needs(){
+    var out = [];
+    Array.prototype.forEach.call(form.querySelectorAll(".need"), function(c){
+      if (c.checked) { out.push(c.value); }
+    });
+    return out.join(", ");
+  }
+  function prettyDate(v){
+    if (!v) { return ""; }
+    var p = v.split("-");
+    if (p.length !== 3) { return v; }
+    var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var m = parseInt(p[1], 10);
+    if (isNaN(m) || m < 1 || m > 12) { return v; }
+    return parseInt(p[2], 10) + " " + months[m - 1] + " " + p[0];
+  }
+  function esc(s){
+    return String(s).replace(/[&<>"]/g, function(c){
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c];
+    });
+  }
+
+  var LINES = [
+    ["Name",           function(){ return val("q-name"); },   "your name"],
+    ["Course & year",  function(){ return val("q-course"); }, "course and year"],
+    ["Study",          function(){ return val("q-topic"); },  "topic or objectives"],
+    ["Design",         function(){ return val("q-design"); }, "study design"],
+    ["Sample size",    function(){ var n = val("q-n"); return n ? "n = " + n : ""; }, "approximate n"],
+    ["Need help with", needs,                                 "choose what you need"],
+    ["Deadline",       function(){ return prettyDate(val("q-date")); }, "submission date"],
+    ["Data status",    function(){ return val("q-status"); }, "where the data is"],
+    ["Notes",          function(){ return val("q-notes"); },  ""]
+  ];
+  var GREETING = "Hi Stat Easy, I'd like a quote for statistical analysis.";
+
+  function build(){
+    var plain = [GREETING, ""];
+    var html = esc(GREETING) + "\n\n";
+    for (var i = 0; i < LINES.length; i++) {
+      var label = LINES[i][0], v = LINES[i][1](), hint = LINES[i][2];
+      if (v) {
+        plain.push(label + ": " + v);
+        html += esc(label + ": " + v) + "\n";
+      } else if (hint) {
+        html += '<span class="ph">' + esc(label + ": " + hint) + "</span>\n";
+      }
+    }
+    pre.innerHTML = html;
+    send.href = "https://wa.me/" + PHONE + "?text=" + encodeURIComponent(plain.join("\n"));
+  }
+
+  form.addEventListener("input", build);
+  form.addEventListener("change", build);
+  form.addEventListener("submit", function(e){ e.preventDefault(); send.click(); });
+  build();
+})();
+</script>
